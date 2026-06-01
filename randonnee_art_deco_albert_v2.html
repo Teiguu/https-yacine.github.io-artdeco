@@ -1,0 +1,295 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dark:#8B6914;--cream:#F7F2E8;--dark:#1A1410;--dark2:#2C2418;--brick:#8B3A2A;--teal-art:#1B5C6B;--success:#2D7A4F;}
+.app{font-family:'Lato',sans-serif;background:var(--cream);color:var(--dark);padding:0;}
+.header{background:var(--dark2);padding:1.5rem 1.5rem 1rem;text-align:center;border-bottom:3px solid var(--gold);position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,var(--gold) 0,var(--gold) 12px,transparent 12px,transparent 18px);}
+.header-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold-light);letter-spacing:2px;}
+.header-sub{font-size:12px;color:#B8A882;letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
+.progress-bar{display:flex;align-items:center;justify-content:center;gap:0;padding:1rem 1.5rem;background:var(--dark);border-bottom:1px solid #333;}
+.step-dot{width:28px;height:28px;border-radius:50%;border:2px solid #444;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#666;background:#1a1a1a;cursor:pointer;transition:all 0.3s;position:relative;z-index:1;}
+.step-dot.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.15);}
+.step-dot.done{border-color:var(--success);color:var(--success);background:rgba(45,122,79,0.15);}
+.step-line{height:2px;width:32px;background:#333;}
+.step-line.done-line{background:var(--success);}
+.content{padding:1.5rem;}
+.location-card{background:white;border-radius:12px;border:1px solid #e8dfc8;overflow:hidden;}
+.location-header{background:var(--dark2);padding:1rem 1.25rem;display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--gold);}
+.step-badge{background:var(--gold);color:var(--dark2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
+.location-name{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold-light);}
+.location-icon{margin-left:auto;font-size:22px;opacity:0.6;}
+.audio-section{padding:1.25rem;background:#faf7f0;border-bottom:1px solid #e8dfc8;}
+.audio-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:8px;}
+.audio-box{background:var(--dark2);border-radius:8px;padding:1rem;color:#d4c9a8;font-size:14px;line-height:1.65;border-left:3px solid var(--gold);font-style:italic;}
+.challenge-section{padding:1.25rem;}
+.challenge-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--brick);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.question-text{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:1rem;line-height:1.4;font-family:'Playfair Display',serif;}
+.options{display:flex;flex-direction:column;gap:8px;}
+.option{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid #e0d8c8;border-radius:8px;cursor:pointer;transition:all 0.2s;background:white;font-size:14px;color:var(--dark);text-align:left;}
+.option:hover{border-color:var(--gold);background:#faf7ef;}
+.option.correct{border-color:var(--success);background:#f0faf5;color:var(--success);font-weight:700;}
+.option.wrong{border-color:var(--brick);background:#fdf5f4;color:var(--brick);}
+.option-letter{width:24px;height:24px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;opacity:0.7;}
+.feedback{margin-top:1rem;padding:0.75rem 1rem;border-radius:0;font-size:14px;line-height:1.5;display:none;}
+.feedback.show{display:block;}
+.feedback.correct-fb{background:#f0faf5;border-left:3px solid var(--success);color:#1a5c36;border-radius:0;}
+.feedback.wrong-fb{background:#fdf5f4;border-left:3px solid var(--brick);color:#7a2015;border-radius:0;}
+.nav-row{padding:1rem 1.5rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.btn{padding:10px 20px;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.5px;cursor:pointer;border:2px solid;transition:all 0.2s;}
+.btn-prev{background:transparent;border-color:#ccc;color:#888;}
+.btn-prev:hover{border-color:#888;color:#444;}
+.btn-next{background:var(--gold);border-color:var(--gold-dark);color:var(--dark2);}
+.btn-next:hover{background:var(--gold-light);}
+.btn-next:disabled{background:#ddd;border-color:#ccc;color:#aaa;cursor:not-allowed;}
+.score-display{font-size:12px;color:#999;text-align:center;}
+.final-screen{padding:2rem 1.5rem;text-align:center;display:none;}
+.trophy{font-size:48px;margin-bottom:1rem;}
+.final-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold-dark);margin-bottom:0.5rem;}
+.final-score{font-size:18px;color:var(--dark);margin-bottom:1.5rem;}
+.final-score span{font-size:36px;font-weight:700;color:var(--gold);}
+.star-row{display:flex;justify-content:center;gap:8px;margin-bottom:1.5rem;}
+.star{font-size:28px;filter:grayscale(1);transition:filter 0.4s;}
+.star.lit{filter:grayscale(0);}
+.final-msg{font-size:14px;color:#666;max-width:320px;margin:0 auto 1.5rem;line-height:1.6;}
+.btn-restart{background:var(--teal-art);border-color:var(--teal-art);color:white;padding:12px 28px;}
+.btn-restart:hover{opacity:0.85;}
+.geo-deco{height:6px;background:repeating-linear-gradient(90deg,var(--gold) 0,var(--gold) 8px,var(--dark2) 8px,var(--dark2) 16px);}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">À la Déco'verte de l'Art Déco — jeu de randonnée en 5 étapes à Albert</h2>
+
+<div class="app">
+  <div class="header">
+    <div class="header-title">À la Déco'verte de l'Art Déco</div>
+    <div class="header-sub">Randonnée ludique · 5 étapes · Albert</div>
+  </div>
+  <div class="geo-deco"></div>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="content" id="mainContent"></div>
+  <div class="final-screen" id="finalScreen">
+    <div class="trophy">🏆</div>
+    <div class="final-title">Bravo, les explorateurs !</div>
+    <div class="final-score">Score : <span id="finalScoreNum">0</span> / 5</div>
+    <div class="star-row" id="starRow">
+      <div class="star">⭐</div><div class="star">⭐</div><div class="star">⭐</div><div class="star">⭐</div><div class="star">⭐</div>
+    </div>
+    <div class="final-msg" id="finalMsg"></div>
+    <button class="btn btn-restart" onclick="restart()">🔄 Recommencer</button>
+  </div>
+</div>
+
+<script>
+const steps = [
+  {
+    id:0,
+    name:"Office de tourisme",
+    icon:"🗺️",
+    audio:"Bienvenue au Pays du Coquelicot ! En sortant de l'office de tourisme, levez les yeux en face de vous. Vous y découvrez une splendide façade de garage Art Déco. Ce garage incarne parfaitement ce style qui fusionnait l'art et l'industrie dans les années 20-30. Ses motifs géométriques et ses reliefs respirent l'énergie d'une époque en pleine révolution industrielle. Dans cette période, l'automobile demeurait encore un symbole de luxe. Parmi les voitures emblématiques, on trouvait la 5HP Citroën, la Peugeot Quadrilette… ou encore le Ford T de 1922, visible au Musée de l'Épopée de l'Industrie et de l'Aéronautique. Le terme « Art Déco » lui-même est une invention récente : il apparaît dans les années 1960, en référence à l'Exposition Internationale des Arts Décoratifs et Industries Modernes tenue à Paris en 1925.",
+    question:"Le terme « Art Déco » n'existait pas dans les années 20. En quelle décennie a-t-il été inventé, et en référence à quelle exposition parisienne ?",
+    options:[
+      "Dans les années 1940, en référence à l'Exposition Universelle de 1937",
+      "Dans les années 1960, en référence à l'Exposition des Arts Décoratifs de 1925",
+      "Dans les années 1950, en référence à l'Exposition du Centenaire de 1889",
+      "Dans les années 1970, en référence à la Biennale de Paris de 1968"
+    ],
+    correct:1,
+    feedback_correct:"Exact ! Le terme est apparu dans les années 1960, bien après la période qu'il désigne, pour se référer à l'Exposition Internationale des Arts Décoratifs et Industries Modernes de Paris en 1925.",
+    feedback_wrong:"Pas tout à fait ! L'audio précisait : le terme « Art Déco » apparaît dans les années 1960, en référence à l'Exposition de 1925 à Paris."
+  },
+  {
+    id:1,
+    name:"Mairie d'Albert",
+    icon:"🏛️",
+    audio:"Vous êtes devant l'Hôtel de Ville d'Albert, inauguré le 1er août 1932. À la base, c'est le Président Paul Doumer qui devait inaugurer ce bâtiment — mais il fut assassiné le 7 mai 1932 à Paris, et c'est finalement le Président Albert Lebrun qui présida la cérémonie. Trop tard pour changer la plaque déjà gravée au nom de Doumer… On dit qu'elle aurait été retournée pour être regravée au dos au nom de Lebrun ! Ce majestueux beffroi domine la ville à 64 mètres de hauteur. Son carillon de style Westminster sonne tous les quarts d'heure. L'architecte breton Alexandre Miniac et l'architecte Benjamin Maneval ont mêlé l'héritage néo-flamand aux lignes audacieuses de la modernité.",
+    question:"Deux architectes ont collaboré pour bâtir cet Hôtel de Ville. L'un était breton, l'autre picard. Quel style architectural ont-ils fusionné pour créer ce bâtiment unique ?",
+    options:[
+      "Le style néo-gothique et le baroque flamand",
+      "Le style haussmannien et l'Art Nouveau",
+      "L'héritage néo-flamand et les lignes Art Déco de la modernité",
+      "Le style néo-roman et le classicisme français"
+    ],
+    correct:2,
+    feedback_correct:"Bravo ! Alexandre Miniac et Benjamin Maneval ont mêlé à la perfection l'héritage néo-flamand aux lignes audacieuses de la modernité Art Déco — un mélange unique qu'on appelle ici « Art Déco Régionaliste ».",
+    feedback_wrong:"Raté ! L'audio décrivait la rencontre entre l'héritage néo-flamand et les lignes Art Déco de la modernité, fruit de la collaboration entre Alexandre Miniac et Benjamin Maneval."
+  },
+  {
+    id:2,
+    name:"Basilique Notre-Dame de Brebières",
+    icon:"⛪",
+    audio:"La Basilique Notre-Dame de Brebières, surnommée la 'petite Lourdes du Nord', fut inaugurée en 1901 puis complètement détruite pendant la Grande Guerre. Le 15 janvier 1915, la Vierge Dorée qui trône au sommet fut touchée par des obus et s'inclina à l'horizontale. Les soldats du Commonwealth répandirent alors cette légende : 'Quand la Vierge tombera, la guerre cessera.' La Vierge tomba le 16 avril 1918, l'année de la fin de la guerre. La Basilique fut reconstruite à l'identique en 1927 par Louis Duthoit, fils du premier architecte Edmond Duthoit, en hommage à son père. À l'intérieur, deux statues Art Déco s'y font face : Sainte Thérèse et Jeanne d'Arc. Elles sont très épurées, féminines, mais avec des courbes géométriques caractéristiques du style.",
+    question:"À l'intérieur de la Basilique reconstruite, deux statues Art Déco se font face. Lesquelles, et qu'est-ce qui symbolise chacune dans la mosaïque derrière elles ?",
+    options:[
+      "La Vierge Marie et Sainte Bernadette — une étoile dorée et un lys blanc",
+      "Sainte Thérèse et Jeanne d'Arc — les roses de Thérèse et les flammes du bûcher",
+      "Marie-Madeleine et Sainte Claire — un livre ouvert et une colombe",
+      "Sainte Thérèse et Sainte Cécile — des roses et une harpe dorée"
+    ],
+    correct:1,
+    feedback_correct:"Parfait ! Sainte Thérèse face à Jeanne d'Arc. Derrière elles, la mosaïque représente les roses de Sainte Thérèse et les flammes du bûcher pour Jeanne d'Arc — une symbolique saisissante.",
+    feedback_wrong:"Pas exactement ! L'audio décrivait Sainte Thérèse et Jeanne d'Arc, avec derrière elles les roses de Thérèse et les flammes du bûcher dans une magnifique mosaïque."
+  },
+  {
+    id:3,
+    name:"Gare d'Albert",
+    icon:"🚂",
+    audio:"La gare d'Albert a été complètement détruite pendant la Bataille de la Somme de 1916, puis reconstruite en 1920 par l'architecte Gustave Umbdenstock dans un style flamand original : la forme d'une locomotive ! Le clocher de la gare fait référence à la cheminée du train. Depuis 1991, un Potez 36 est exposé à l'intérieur. Cet avion a effectué son premier vol en 1928 et est considéré comme l'appareil ayant donné naissance à l'aviation de tourisme dans les années 30. Il est là pour rendre hommage à l'avionneur Henry Potez. La maison de cet avionneur, le Domaine du Vivier, existe toujours et a été conservée dans son style Art Déco.",
+    question:"Le Potez 36 exposé dans la gare est un symbole fort de ce territoire. En quelle année a-t-il effectué son premier vol, et pourquoi est-il historiquement important ?",
+    options:[
+      "Premier vol en 1922 — premier avion à réaction européen",
+      "Premier vol en 1935 — premier avion militaire picard",
+      "Premier vol en 1928 — considéré comme l'avion fondateur de l'aviation de tourisme",
+      "Premier vol en 1919 — premier avion postal transatlantique"
+    ],
+    correct:2,
+    feedback_correct:"Exact ! Le Potez 36 a effectué son premier vol en 1928 et est considéré comme l'appareil ayant donné naissance à l'aviation de tourisme dans les années 30. Un hommage à Henry Potez, grand avionneur du territoire.",
+    feedback_wrong:"Raté ! L'audio précisait : premier vol en 1928, et cet avion est considéré comme celui ayant donné naissance à l'aviation de tourisme dans les années 30."
+  },
+  {
+    id:4,
+    name:"Théâtre du Jeu de Paume",
+    icon:"🎭",
+    audio:"Vous êtes devant le Théâtre du Jeu de Paume, inauguré en 1993. Son architecte écossais Ian Ritchie a voulu que son bâtiment rappelle le développement économique de la ville depuis ses origines agricoles, jusqu'à l'industrialisation du 19ème siècle et l'aéronautique. Mais savez-vous pourquoi ce lieu s'appelle le Jeu de Paume ? C'est ici, sur cette place, que l'on jouait autrefois à des jeux traditionnels picards : le jeu de paume et le Ballon au Poing. Ces jeux picards se jouent aujourd'hui sur la place près de la gare. Et saviez-vous qu'Albert se surnomme aussi « la ville aux trois clochers » ? Il a été décidé à la reconstruction de placer les trois édifices principaux sur le même axe : le clocher de la gare, celui de la Basilique et celui de l'Hôtel de Ville sont tous alignés !",
+    question:"Albert porte un surnom lié à son urbanisme de reconstruction. Lequel, et quels sont les trois édifices délibérément alignés sur le même axe ?",
+    options:[
+      "« La ville aux trois ponts » — le pont de l'Ancre, le pont du Canal et le pont de la Gare",
+      "« La ville aux trois clochers » — la gare, la Basilique et l'Hôtel de Ville",
+      "« La ville aux trois places » — la place d'Armes, la place Gambetta et la place de la Gare",
+      "« La ville aux trois tours » — le beffroi, le château d'eau et le clocher de la Basilique"
+    ],
+    correct:1,
+    feedback_correct:"Bravo ! « La ville aux trois clochers » — les clochers de la gare, de la Basilique et de l'Hôtel de Ville ont été volontairement alignés lors de la reconstruction. Une décision urbanistique unique !",
+    feedback_wrong:"Pas tout à fait ! L'audio révélait qu'Albert se surnomme « la ville aux trois clochers », avec la gare, la Basilique et l'Hôtel de Ville délibérément alignés sur le même axe."
+  }
+];
+
+let current=0,score=0;
+let answered=new Array(5).fill(false);
+let userAnswers=new Array(5).fill(null);
+
+function renderProgress(){
+  const pb=document.getElementById('progressBar');
+  pb.innerHTML='';
+  for(let i=0;i<5;i++){
+    if(i>0){
+      const line=document.createElement('div');
+      line.className='step-line'+(answered[i-1]?' done-line':'');
+      pb.appendChild(line);
+    }
+    const dot=document.createElement('div');
+    let cls='step-dot';
+    if(i===current)cls+=' active';
+    else if(answered[i]&&userAnswers[i]===steps[i].correct)cls+=' done';
+    dot.className=cls;
+    dot.textContent=i+1;
+    dot.onclick=()=>{current=i;render();};
+    pb.appendChild(dot);
+  }
+}
+
+function render(){
+  const step=steps[current];
+  const isAnswered=answered[current];
+  const userAns=userAnswers[current];
+  renderProgress();
+  const main=document.getElementById('mainContent');
+  main.innerHTML=`
+    <div class="location-card">
+      <div class="location-header">
+        <div class="step-badge">${current+1}</div>
+        <div class="location-name">${step.name}</div>
+        <div class="location-icon">${step.icon}</div>
+      </div>
+      <div class="audio-section">
+        <div class="audio-label">🔊 Audio du lieu</div>
+        <div class="audio-box">${step.audio}</div>
+      </div>
+      <div class="challenge-section">
+        <div class="challenge-label">🎯 Défi</div>
+        <div class="question-text">${step.question}</div>
+        <div class="options">
+          ${step.options.map((opt,i)=>{
+            let cls='option';
+            if(isAnswered){
+              if(i===step.correct)cls+=' correct';
+              else if(i===userAns&&i!==step.correct)cls+=' wrong';
+            }
+            return `<button class="${cls}" onclick="answer(${i})" ${isAnswered?'disabled':''}>
+              <span class="option-letter">${['A','B','C','D'][i]}</span>${opt}
+            </button>`;
+          }).join('')}
+        </div>
+        <div class="feedback ${isAnswered?'show':''} ${isAnswered&&userAns===step.correct?'correct-fb':'wrong-fb'}">
+          ${isAnswered?(userAns===step.correct?'✅ '+step.feedback_correct:'❌ '+step.feedback_wrong):''}
+        </div>
+      </div>
+    </div>`;
+  const nav=document.createElement('div');
+  nav.className='nav-row';
+  const prevBtn=document.createElement('button');
+  prevBtn.className='btn btn-prev';
+  prevBtn.textContent='← Retour';
+  prevBtn.disabled=current===0;
+  prevBtn.onclick=()=>{if(current>0){current--;render();}};
+  const scoreDisp=document.createElement('div');
+  scoreDisp.className='score-display';
+  const doneCount=answered.filter(Boolean).length;
+  scoreDisp.innerHTML=`${doneCount}/5 répondus<br><strong style="color:var(--gold)">${score} point${score!==1?'s':''}</strong>`;
+  const nextBtn=document.createElement('button');
+  nextBtn.className='btn btn-next';
+  if(current<4){
+    nextBtn.textContent='Suivant →';
+    nextBtn.disabled=!isAnswered;
+    nextBtn.onclick=()=>{current++;render();};
+  }else{
+    nextBtn.textContent='Voir les résultats 🏆';
+    nextBtn.disabled=!answered.every(Boolean);
+    nextBtn.onclick=showFinal;
+  }
+  nav.appendChild(prevBtn);
+  nav.appendChild(scoreDisp);
+  nav.appendChild(nextBtn);
+  main.appendChild(nav);
+}
+
+function answer(idx){
+  if(answered[current])return;
+  answered[current]=true;
+  userAnswers[current]=idx;
+  if(idx===steps[current].correct)score++;
+  render();
+}
+
+function showFinal(){
+  document.getElementById('mainContent').style.display='none';
+  document.getElementById('progressBar').style.display='none';
+  const fin=document.getElementById('finalScreen');
+  fin.style.display='block';
+  document.getElementById('finalScoreNum').textContent=score;
+  const msgs=[
+    "On repart de zéro ! L'Art Déco d'Albert n'a pas encore livré tous ses secrets…",
+    "Pas mal pour un début ! Quelques détails vous ont résisté — réessayez pour tout maîtriser !",
+    "Très bien joué ! Vos yeux commencent à voir la ville comme ses architectes l'ont rêvée.",
+    "Bravo ! Vous êtes désormais de fins connaisseurs des années folles albertines !",
+    "PARFAIT ! Vous êtes de véritables experts de l'Art Déco d'Albert — félicitations !"
+  ];
+  const msgIdx=score===0?0:score<=2?1:score===3?2:score===4?3:4;
+  document.getElementById('finalMsg').textContent=msgs[msgIdx];
+  const stars=document.querySelectorAll('.star');
+  const lit=score===0?0:score===1?1:score===2?2:score===3?3:score===4?4:5;
+  stars.forEach((s,i)=>{setTimeout(()=>{if(i<lit)s.classList.add('lit');},i*200);});
+}
+
+function restart(){
+  current=0;score=0;
+  answered=new Array(5).fill(false);
+  userAnswers=new Array(5).fill(null);
+  document.getElementById('finalScreen').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+  document.getElementById('progressBar').style.display='flex';
+  render();
+}
+
+render();
+</script>
